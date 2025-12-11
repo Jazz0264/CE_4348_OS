@@ -7,6 +7,9 @@
 int *mem_read(int addr);
 void mem_write(int addr, int *data);
 
+// function prototypes from scheduler.c
+void new_process(int base, int size);
+
 // struct of opcodes for jump table
 typedef struct
 {
@@ -71,7 +74,8 @@ int *translate(char *instruction)
     return NULL;
 }
 
-void load_prog(char *fname, int addr)
+// updated load program function
+int load_prog(char *fname, int addr)
 {
     // open the file
     FILE *f = fopen(fname, "r");
@@ -81,7 +85,7 @@ void load_prog(char *fname, int addr)
         fprintf(stderr, "Error opening file %s\n", fname);
         perror(fname);
         exit(EXIT_FAILURE);
-        return;
+        return 0;
     }
     // buffer for reading lines
     char line[256];
@@ -106,6 +110,41 @@ void load_prog(char *fname, int addr)
             fprintf(stderr, "Memory limit reached while loading program\n");
             break;
         }
+    }
+    // close the file
+    fclose(f);
+
+    // return number of instructions loaded
+    return cur_addr - addr;
+}
+
+// loads a list of programs from a file
+void load_programs(char fname[]){
+    // open the file
+    FILE *f = fopen(fname, "r");
+    // error check for file open
+    if (!f)
+    {
+        fprintf(stderr, "Error opening list file %s\n", fname);
+        perror(fname);
+        exit(EXIT_FAILURE);
+    }
+    // buffer for reading lines, program name and base address
+    char line[256];
+    char prog_name[128];
+    int base_addr;
+
+    // read each line from file
+    while (fgets(line, sizeof(line), f)){
+        // parse program name and base address
+        if (sscanf(line, "%d %127s", &base_addr, prog_name ) != 2){
+            fprintf(stderr, "Invalid line in program list: %s\n", line);
+            continue;
+        }
+        // load the program into memory
+        int size = load_prog(prog_name, base_addr);
+        // create a new process for the loaded program
+        new_process(base_addr, size);
     }
     // close the file
     fclose(f);

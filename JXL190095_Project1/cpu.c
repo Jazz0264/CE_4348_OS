@@ -4,6 +4,18 @@
 int *mem_read(int addr);
 void mem_write(int addr, int *data);
 
+//new struct to hold CPU registers
+typedef struct {
+    int Base;
+    int PC;
+    int IR0;
+    int IR1;
+    int AC;
+    int MAR;
+    int MBR;
+    int ex;
+} register_struct;
+
 // The CPU registers
 // holds the address of current program (we start at 4 per instructions)
 int Base = 4;
@@ -148,4 +160,31 @@ int clock_cycle()
         return 0;
     else
         return 1;
+}
+
+// next context switch function
+register_struct context_switch(register_struct new_vals) {
+    // store current register values
+    register_struct old_vals;
+    old_vals.Base = Base;
+    old_vals.PC = PC;
+    old_vals.IR0 = IR0;
+    old_vals.IR1 = IR1;
+    old_vals.AC = AC;
+    old_vals.MAR = MAR;
+    old_vals.MBR = MBR;
+    old_vals.ex = ex;
+
+    // load new register values
+    Base = new_vals.Base;
+    PC = new_vals.PC;
+    IR0 = new_vals.IR0;
+    IR1 = new_vals.IR1;
+    AC = new_vals.AC;
+    MAR = new_vals.MAR;
+    MBR = new_vals.MBR;
+    ex = 0; // reset exit flag for new process
+
+    // return the old register values
+    return old_vals;
 }

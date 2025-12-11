@@ -6,6 +6,7 @@ Files:
 -cpu.c
 -disk.c
 -main.c
+-scheduler.c
 
 ## memory.c
 
@@ -20,12 +21,19 @@ Files:
     operations needed from the chosen opcode in memory by using a switch case and the
     translated program is stored in memory.
 
+    context_switch() was added for project 2 to support saving and loading register
+    states of PCBs
+
 ## disk.c
 
     this acts as the program storage and translator for the computer. it will
     begin a filestream to read from a txt file in the same directory and 
     translate formatted instructions into its opcode integer equivalents into memory
     using a jumptable. Will throw an error if file is not found within directory.
+
+    load_programs() was added for project 2, looks for a "program_list.txt" file
+    within the same directory containing the program names of other programs that
+    are to be searched in the same directory
 
 ## main.c
 
@@ -34,14 +42,25 @@ Files:
     at program termination. The program text files MUST be within the same directory
     as the executable or will not run correctly.
 
-    The txt file it searches for is hard coded and named "fname.txt". You may change it by
-    modifying the string in line 37 of the main.c program.
+    for project 2 the main.c program also keeps track of the process and scheduler states
+    as well as clock cycles for the scheduling algorithm.
+
+    Is hard coded to search for the program list "program_list.txt" within the same directory
+    and can be changed in line 46
+
+## scheduler.c
+
+    this program was implemented for project 2 and handles the round robin scheduling
+    and the creation of process control blocks of the programs within the program_list.txt 
+    file with a time quantum of 10 clock cycles.
+
+    the time quantum can be changed at line 49 to some other constant.
 
 ## Compiling
 
     the program was compiled using 
 
-    "gcc memory.c cpu.c disk.c main.c -o main"
+    "gcc memory.c cpu.c disk.c main.c scheduler.c -o main"
 
     and executed with 
 
