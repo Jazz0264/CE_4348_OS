@@ -177,3 +177,37 @@ void new_process(int base, int size) {
     // increment pid label for next process
     pid_label++;
 }
+
+/* New functions for project 3*/
+
+// remove process from ready queue given its PID
+void remove_process(int pid) {
+    // if queue is empty return
+    if (head == NULL) {
+        return;
+    }
+
+    //get current and previous nodes
+    node_t* current = head;
+    node_t* previous = NULL;
+
+    // traverse the queue to find the process with given PID
+    while (current != NULL) {
+        // if the current node's PCB has the matching PID
+        if (current->pcb->pid == pid) {
+            // if it's the head node
+            if (previous == NULL) {
+                head = current->next;
+                // if head is now null, set tail to null
+                if (head == NULL) {
+                    tail = NULL;
+}
+
+// return PID of current acting process
+int current_pid() {
+    // check for active process
+    if (acting_process == NULL) {
+        return -1; 
+    }
+    return acting_process->pid;
+}

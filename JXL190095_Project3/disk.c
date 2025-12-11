@@ -9,6 +9,7 @@ void mem_write(int addr, int *data);
 
 // function prototypes from scheduler.c
 void new_process(int base, int size);
+int current_pid(void);
 
 // struct of opcodes for jump table
 typedef struct
