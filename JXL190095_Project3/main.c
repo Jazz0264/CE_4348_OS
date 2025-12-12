@@ -41,6 +41,10 @@ int main()
 {
     // begin by clearing memory
     clear_mem();
+
+    // now initialize smm
+    init_smm();
+
     // load program txt into memory starting at address 4
     printf("loading programs into memory :) \n");
     load_programs("program_list.txt");

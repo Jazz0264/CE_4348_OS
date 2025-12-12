@@ -201,13 +201,39 @@ void remove_process(int pid) {
                 // if head is now null, set tail to null
                 if (head == NULL) {
                     tail = NULL;
-}
-
+                }
+            } else {
+                previous->next = current->next;
+                // if we removed the tail, update tail pointer
+                if (current == tail) {
+                    tail = previous;
+                }
+            }
+                // if the removed process was the acting process clear acting process
+                if (acting_process->pid == current->pid) {
+                    acting_process = NULL;
+                }
+                // free the removed node
+                free(current);
+                return;
+            }
+            // move to next node
+            previous = current;
+            current = current->next;
+        }        
+    }
 // return PID of current acting process
 int current_pid() {
     // check for active process
     if (acting_process == NULL) {
+        // return -1 if no active process
         return -1; 
     }
+    //else return pid of acting process
     return acting_process->pid;
+}
+
+// return PID of next process
+int next_pid() {
+    return pid_label;
 }
